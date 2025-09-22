@@ -1,0 +1,48 @@
+buses:
+  - {name: "38", vn_kv: 12.0, slack: true}
+  - {name: "30", vn_kv: 12.0}
+  - {name: "32", vn_kv: 12.0}
+  - {name: "33", vn_kv: 12.0}
+  - {name: "34", vn_kv: 12.0}
+  - {name: "39", vn_kv: 12.0}
+  - {name: "10", vn_kv: 12.0}
+  - {name: "8", vn_kv: 12.0}
+  - {name: "3", vn_kv: 12.0}
+  - {name: "17", vn_kv: 12.0}
+  - {name: "1", vn_kv: 12.0}
+
+lines:
+  - {name: "L_1", from: "38", to: "30", length_km: 0.5, type: "MV_std"}
+  - {name: "L_2", from: "30", to: "32", length_km: 0.5, type: "MV_std"}
+  - {name: "L_3", from: "32", to: "33", length_km: 0.5, type: "MV_std"}
+  - {name: "L_4", from: "33", to: "34", length_km: 0.5, type: "MV_std"}
+  - {name: "L_5", from: "34", to: "39", length_km: 0.5, type: "MV_std"}
+  - {name: "L_6", from: "30", to: "10", length_km: 0.1, type: "MV_std"}
+  - {name: "L_7", from: "32", to: "8", length_km: 0.1, type: "MV_std"}
+  - {name: "L_8", from: "33", to: "3", length_km: 0.1, type: "MV_std"}
+  - {name: "L_9", from: "34", to: "17", length_km: 0.1, type: "MV_std"}
+  - {name: "L_10", from: "39", to: "1", length_km: 0.1, type: "MV_std"}
+
+loads:
+  - {name: "LoadA", bus: "10", p_kw: 200}
+  - {name: "LoadB", bus: "8", p_kw: 100}
+  - {name: "LoadC", bus: "3", p_kw: 300}
+  - {name: "LoadD", bus: "17", p_kw: 1000}
+  - {name: "LoadE", bus: "1", p_kw: 100}
+
+reliability:
+  - {line: "L_1", lambda: 0.25, mttr: 3.0}
+  - {line: "L_2", lambda: 0.20, mttr: 2.0}
+  - {line: "L_3", lambda: 0.15, mttr: 3.0}
+  - {line: "L_4", lambda: 0.2, mttr: 4.0}
+  - {line: "L_5", lambda: 0.15, mttr: 3.0}
+  - {line: "L_6",  lambda: 0.2, mttr: 2.0}
+  - {line: "L_7",  lambda: 0.05, mttr: 2.0}
+  - {line: "L_8",  lambda: 0.05, mttr: 2.0}
+  - {line: "L_9",  lambda: 0.07, mttr: 3.0}
+  - {line: "L_10",  lambda: 0.04, mttr: 2.0}
+
+protections:
+  - {type: CB, line: "L_1", at_bus: "38"}
+  - {type: CB, line: "L_2", at_bus: "32"}
+  - {type: RC, line: "L_4", at_bus: "34"}
