@@ -95,12 +95,8 @@ def build_network(yaml_path):
 
     # Customers per load (optional; default 1 each)
     load_customers = {}
-    if "load_customers" in data:
-        for lc in data["load_customers"]:
-            load_customers[str(lc["load"]).strip()] = int(lc.get("customers", 1))
-    else:
-        for ld in data.get("loads", []):
-            load_customers[str(ld["name"]).strip()] = int(ld.get("customers", 1))
+    for ld in data.get("loads", []):
+        load_customers[str(ld["name"]).strip()] = int(ld.get("clients", 1))
 
     return net, reliability, load_customers, protections
 
@@ -340,6 +336,10 @@ def reliability_analysis(net, reliability, load_customers, protections, max_orde
         SAIFI = sum(load_customers.get(ld, 1) for ld, _, _ in aff) * lam
         SAIDI = sum(load_customers.get(ld, 1) for ld, _, _ in aff) * lam * mttr
 
+        total_clients = sum(load_customers.values())
+        SAIFI_norm = SAIFI / total_clients if total_clients > 0 else 0
+        SAIDI_norm = SAIDI / total_clients if total_clients > 0 else 0
+
         rows.append({
             "order": 1,
             "mode": f"N-1:{name}",
@@ -349,6 +349,8 @@ def reliability_analysis(net, reliability, load_customers, protections, max_orde
             "EENS_MWh": EENS,
             "SAIFI": SAIFI,
             "SAIDI": SAIDI,
+            "SAIFI_norm": SAIFI_norm,
+            "SAIDI_norm": SAIDI_norm,
             "p_unsup_MW": s["p_unsup_MW"],
             "affected_loads_count": s["affected_loads_count"],
             "affected_loads_csv": s["affected_loads_csv"],
@@ -374,6 +376,10 @@ def reliability_analysis(net, reliability, load_customers, protections, max_orde
                 SAIFI = sum(load_customers.get(ld, 1) for ld, _, _ in aff) * lam
                 SAIDI = sum(load_customers.get(ld, 1) for ld, _, _ in aff) * lam * mttr
 
+                total_clients = sum(load_customers.values())
+                SAIFI_norm = SAIFI / total_clients if total_clients > 0 else 0
+                SAIDI_norm = SAIDI / total_clients if total_clients > 0 else 0
+
                 rows.append({
                     "order": 2,
                     "mode": f"N-2:{a}+{b}",
@@ -383,6 +389,8 @@ def reliability_analysis(net, reliability, load_customers, protections, max_orde
                     "EENS_MWh": EENS,
                     "SAIFI": SAIFI,
                     "SAIDI": SAIDI,
+                    "SAIFI_norm": SAIFI_norm,
+                    "SAIDI_norm": SAIDI_norm,
                     "p_unsup_MW": s["p_unsup_MW"],
                     "affected_loads_count": s["affected_loads_count"],
                     "affected_loads_csv": s["affected_loads_csv"],
@@ -527,7 +535,7 @@ def save_topology_plot(net, protections, png_path="topology.png", dpi=200):
     return png_path
 
 
-def per_load_indices(results_df, net):
+def per_load_indices(results_df, net, load_customers):
     """
     Compute ENS (MWh/yr), SAIFI (int/yr), SAIDI (h/yr) per load.
     results_df must have: affected_loads_list, lambda_per_yr, mttr_h.
@@ -537,6 +545,8 @@ def per_load_indices(results_df, net):
     load_p_mw = {str(r["name"]): float(r["p_mw"]) for _, r in net.load.iterrows()}
 
     out = []
+    total_clients = sum(load_customers.values())
+
     for ld in load_names:
         ens = 0.0
         saifi = 0.0
@@ -548,7 +558,11 @@ def per_load_indices(results_df, net):
                 ens  += load_p_mw[ld] * lam * mttr      # MWh/yr
                 saifi += lam                             # int/yr
                 saidi += lam * mttr                      # h/yr
-        out.append({"load": ld, "ENS_MWh": ens, "SAIFI": saifi, "SAIDI_h": saidi})
+        
+        saifi_norm = saifi / total_clients if total_clients > 0 else 0
+        saidi_norm = saidi / total_clients if total_clients > 0 else 0
+
+        out.append({"load": ld, "ENS_MWh": ens, "SAIFI": saifi, "SAIDI_h": saidi, "SAIFI_norm": saifi_norm, "SAIDI_norm": saidi_norm})
     return pd.DataFrame(out)
 
 
@@ -571,7 +585,7 @@ def main():
     print("Saved: modes_ranking.csv")
 
     # Compute per-load reliability indices
-    per_load = per_load_indices(df, net)
+    per_load = per_load_indices(df, net, load_customers)
     per_load.to_csv("per_load_indices.csv", index=False)
 
     print("\n=== Per-load reliability indices ===")

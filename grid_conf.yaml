@@ -24,11 +24,11 @@ lines:
   - {name: "L_10", from: "39", to: "1", length_km: 0.1, type: "MV_std"}
 
 loads:
-  - {name: "LoadA", bus: "10", p_kw: 200}
-  - {name: "LoadB", bus: "8", p_kw: 100}
-  - {name: "LoadC", bus: "3", p_kw: 300}
-  - {name: "LoadD", bus: "17", p_kw: 1000}
-  - {name: "LoadE", bus: "1", p_kw: 100}
+  - {name: "LoadA", bus: "10", p_kw: 200, clients: 50}
+  - {name: "LoadB", bus: "8", p_kw: 100, clients: 30}
+  - {name: "LoadC", bus: "3", p_kw: 300, clients: 100}
+  - {name: "LoadD", bus: "17", p_kw: 1000, clients: 200}
+  - {name: "LoadE", bus: "1", p_kw: 100, clients: 20}
 
 reliability:
   - {line: "L_1", lambda: 0.25, mttr: 3.0}
