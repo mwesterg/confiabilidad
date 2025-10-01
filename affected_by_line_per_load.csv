@@ -1,6 +1,6 @@
 load,affected_by_lines_count,lines_csv
-LoadB,10,"L_1, L_10, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
-LoadC,10,"L_1, L_10, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
-LoadD,10,"L_1, L_10, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
-LoadE,10,"L_1, L_10, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
-LoadA,3,"L_1, L_2, L_6"
+LoadC,11,"L_1, L_10, L_11, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
+LoadD,11,"L_1, L_10, L_11, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
+LoadE,11,"L_1, L_10, L_11, L_2, L_3, L_4, L_5, L_6, L_7, L_8, L_9"
+LoadA,5,"L_1, L_2, L_3, L_6, L_7"
+LoadB,5,"L_1, L_2, L_3, L_6, L_7"

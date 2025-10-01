@@ -1,0 +1,52 @@
+buses:
+  - {name: "28", vn_kv: 12.0, slack: true}
+  - {name: "25", vn_kv: 12.0}
+  - {name: "21", vn_kv: 12.0}
+  - {name: "22", vn_kv: 12.0}
+  - {name: "24", vn_kv: 12.0}
+  - {name: "41", vn_kv: 12.0}
+  - {name: "23", vn_kv: 12.0}
+  - {name: "5", vn_kv: 12.0}
+  - {name: "4", vn_kv: 12.0}
+  - {name: "27", vn_kv: 12.0}
+  - {name: "6", vn_kv: 12.0}
+  - {name: "7", vn_kv: 12.0}
+
+
+lines:
+  - {name: "L_1", from: "28", to: "25", length_km: 0.5, type: "MV_std", RepTime: 1.5}
+  - {name: "L_2", from: "25", to: "21", length_km: 0.5, type: "MV_std", RepTime: 1.9}
+  - {name: "L_3", from: "21", to: "22", length_km: 0.5, type: "MV_std", RepTime: 1.6}
+  - {name: "L_4", from: "22", to: "24", length_km: 0.5, type: "MV_std", RepTime: 1.3}
+  - {name: "L_5", from: "24", to: "41", length_km: 0.5, type: "MV_std", RepTime: 1.2}
+  - {name: "L_6", from: "25", to: "5", length_km: 0.1, type: "MV_std" , RepTime: 2.2}
+  - {name: "L_7", from: "21", to: "4", length_km: 0.1, type: "MV_std" , RepTime: 2.3}
+  - {name: "L_8", from: "22", to: "23", length_km: 0.1, type: "MV_std", RepTime: 2.4}
+  - {name: "L_9", from: "23", to: "27", length_km: 0.1, type: "MV_std", RepTime: 2.5}
+  - {name: "L_10", from: "23", to: "6", length_km: 0.1, type: "MV_std", RepTime: 2.6}
+  - {name: "L_11", from: "24", to: "7", length_km: 0.1, type: "MV_std", RepTime: 2.7}
+
+loads:
+  - {name: "LoadA", bus: "5", p_kw: 500, clients: 100}
+  - {name: "LoadB", bus: "4", p_kw: 150, clients: 200}
+  - {name: "LoadC", bus: "27", p_kw: 200, clients: 150}
+  - {name: "LoadD", bus: "6", p_kw: 150, clients: 350}
+  - {name: "LoadE", bus: "7", p_kw: 450, clients: 600}
+
+reliability:
+  - {line: "L_1", lambda: 0.25, mttr: 3.0}
+  - {line: "L_2", lambda: 0.20, mttr: 2.0}
+  - {line: "L_3", lambda: 0.15, mttr: 3.0}
+  - {line: "L_4", lambda: 0.2, mttr: 4.0}
+  - {line: "L_5", lambda: 0.15, mttr: 3.0}
+  - {line: "L_6",  lambda: 0.2, mttr: 2.0}
+  - {line: "L_7",  lambda: 0.05, mttr: 2.0}
+  - {line: "L_8",  lambda: 0.05, mttr: 2.0}
+  - {line: "L_9",  lambda: 0.07, mttr: 3.0}
+  - {line: "L_10",  lambda: 0.04, mttr: 2.0}
+  - {line: "L_11",  lambda: 0.14, mttr: 2.0}
+
+protections:
+  - {type: CB, line: "L_1", at_bus: "28"}
+  - {type: CB, line: "L_3", at_bus: "22"}
+  - {type: RC, line: "L_4", at_bus: "24", RepoTime: .75}
